@@ -1,12 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { FiArrowLeft } from 'react-icons/fi'
+import { MapContainer, Marker, TileLayer } from 'react-leaflet'
 
 import './styles.css'
 
 import logo from '../../assets/logo.svg'
 
 const CreatePoint = () => {
+
   return (
     <div id="page-create-point">
       <header>
@@ -58,6 +60,14 @@ const CreatePoint = () => {
             <h2>Endereço</h2>
             <span>Selecione o endereço no mapa</span>
           </legend>
+
+          <MapContainer bounds={[-23.1798188, -45.8257099]} boundsOptions={15}>
+            <TileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+
+            <Marker position={[-23.1798188, -45.8257099]} />
+          </MapContainer>
 
           <div className="field-group">
             <div className="field">
