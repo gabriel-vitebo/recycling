@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiArrowLeft } from 'react-icons/fi'
-import { MapContainer, Marker, TileLayer } from 'react-leaflet'
-
-
+import { MapContainer, TileLayer, Marker } from 'react-leaflet'
+import { AxiosResponse } from 'axios'
 import { api } from '../../services/api'
-
-
-import './styles.css'
-
-
 import logo from '../../assets/logo.svg'
-
+import './styles.css'
 
 interface Item {
   id: string,
@@ -19,18 +13,14 @@ interface Item {
   image_url: string
 }
 
-
 const CreatePoint = () => {
   const [items, setItems] = useState<Item[]>([])
 
-
   useEffect(() => {
-    api.get('items').then((response) => {
+    api.get('items').then((response: AxiosResponse) => {
       setItems(response.data.serializedItems)
     })
   }, [])
-
-
   return (
     <div id="page-create-point">
       <header>
@@ -40,15 +30,12 @@ const CreatePoint = () => {
           Voltar para home
         </Link>
       </header>
-
-
       <form >
         <h1>Cadastro do <br /> ponto de Coleta</h1>
         <fieldset>
           <legend>
             <h2>Dados</h2>
           </legend>
-
 
           <div className="field">
             <label htmlFor="name">Nome da Entidade</label>
@@ -58,7 +45,6 @@ const CreatePoint = () => {
               id="name"
             />
           </div>
-
 
           <div className="field-group">
             <div className="field">
@@ -80,13 +66,11 @@ const CreatePoint = () => {
           </div>
         </fieldset>
 
-
         <fieldset>
           <legend>
             <h2>Endereço</h2>
             <span>Selecione o endereço no mapa</span>
           </legend>
-
 
           <MapContainer center={[-23.1798188, -45.8257099]} zoom={15} >
             <TileLayer
@@ -95,7 +79,6 @@ const CreatePoint = () => {
             />
             <Marker position={[-23.1798188, -45.8257099]} />
           </MapContainer>
-
 
           <div className="field-group">
             <div className="field">
@@ -120,7 +103,6 @@ const CreatePoint = () => {
             <span>Selecione um ou mais itens abaixo</span>
           </legend>
 
-
           <ul className='items-grid'>
             {items.map(item => (
               <li key={item.id}>
@@ -130,7 +112,6 @@ const CreatePoint = () => {
             ))}
           </ul>
         </fieldset>
-
 
         <button type="submit">Cadastrar Ponto de Coleta</button>
       </form>
