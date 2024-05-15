@@ -1,13 +1,35 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiArrowLeft } from 'react-icons/fi'
 import { MapContainer, Marker, TileLayer } from 'react-leaflet'
 
+
+import { api } from '../../services/api'
+
+
 import './styles.css'
+
 
 import logo from '../../assets/logo.svg'
 
+
+interface Item {
+  id: string,
+  title: string,
+  image_url: string
+}
+
+
 const CreatePoint = () => {
+  const [items, setItems] = useState<Item[]>([])
+
+
+  useEffect(() => {
+    api.get('items').then((response) => {
+      setItems(response.data.serializedItems)
+    })
+  }, [])
+
 
   return (
     <div id="page-create-point">
@@ -19,12 +41,14 @@ const CreatePoint = () => {
         </Link>
       </header>
 
+
       <form >
         <h1>Cadastro do <br /> ponto de Coleta</h1>
         <fieldset>
           <legend>
             <h2>Dados</h2>
           </legend>
+
 
           <div className="field">
             <label htmlFor="name">Nome da Entidade</label>
@@ -34,6 +58,7 @@ const CreatePoint = () => {
               id="name"
             />
           </div>
+
 
           <div className="field-group">
             <div className="field">
@@ -55,19 +80,22 @@ const CreatePoint = () => {
           </div>
         </fieldset>
 
+
         <fieldset>
           <legend>
             <h2>Endereço</h2>
             <span>Selecione o endereço no mapa</span>
           </legend>
 
-          <MapContainer bounds={[-23.1798188, -45.8257099]} boundsOptions={15}>
+
+          <MapContainer center={[-23.1798188, -45.8257099]} zoom={15} >
             <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-
             <Marker position={[-23.1798188, -45.8257099]} />
           </MapContainer>
+
 
           <div className="field-group">
             <div className="field">
@@ -85,39 +113,24 @@ const CreatePoint = () => {
           </div>
         </fieldset>
 
+
         <fieldset>
           <legend>
             <h2>Itens de Coleta</h2>
             <span>Selecione um ou mais itens abaixo</span>
           </legend>
 
+
           <ul className='items-grid'>
-            <li className="selected">
-              <img src="http://localhost:3333/uploads/lampadas.svg" alt="teste" />
-              <span>Óleo de Cozinha</span>
-            </li>
-            <li>
-              <img src="http://localhost:3333/uploads/lampadas.svg" alt="teste" />
-              <span>Óleo de Cozinha</span>
-            </li>
-            <li>
-              <img src="http://localhost:3333/uploads/lampadas.svg" alt="teste" />
-              <span>Óleo de Cozinha</span>
-            </li>
-            <li>
-              <img src="http://localhost:3333/uploads/lampadas.svg" alt="teste" />
-              <span>Óleo de Cozinha</span>
-            </li>
-            <li>
-              <img src="http://localhost:3333/uploads/lampadas.svg" alt="teste" />
-              <span>Óleo de Cozinha</span>
-            </li>
-            <li>
-              <img src="http://localhost:3333/uploads/lampadas.svg" alt="teste" />
-              <span>Óleo de Cozinha</span>
-            </li>
+            {items.map(item => (
+              <li key={item.id}>
+                <img src={item.image_url} alt={`Imagem do item ${item.title}`} />
+                <span>{item.title}</span>
+              </li>
+            ))}
           </ul>
         </fieldset>
+
 
         <button type="submit">Cadastrar Ponto de Coleta</button>
       </form>
@@ -125,5 +138,10 @@ const CreatePoint = () => {
   )
 }
 
+
 export default CreatePoint
+
+
+
+
 
