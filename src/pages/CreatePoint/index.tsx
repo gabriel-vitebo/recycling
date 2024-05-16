@@ -30,6 +30,7 @@ const CreatePoint = () => {
   const [items, setItems] = useState<Item[]>([])
   const [ufs, setUfs] = useState<string[]>([])
   const [cities, setCities] = useState<string[]>([])
+  const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0])
 
   const [selectedUf, setSelectedUf] = useState('0')
   const [selectedCity, setSelectedCity] = useState('0')
@@ -78,7 +79,10 @@ const CreatePoint = () => {
   }
 
   const handleMapClick = (event: LeafletMouseEvent) => {
-    console.log(event.latlng)
+    setSelectedPosition([
+      event.latlng.lat,
+      event.latlng.lng
+    ])
   }
 
   const MapEventsHandler: React.FC<MapEventsHandlerProps> = ({ handleMapClick }) => {
@@ -145,7 +149,7 @@ const CreatePoint = () => {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <MapEventsHandler handleMapClick={handleMapClick} />
-            <Marker position={[-23.1798188, -45.8257099]} />
+            <Marker position={selectedPosition} />
           </MapContainer>
 
           <div className="field-group">
