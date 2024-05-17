@@ -31,10 +31,11 @@ const CreatePoint = () => {
   const [ufs, setUfs] = useState<string[]>([])
   const [cities, setCities] = useState<string[]>([])
   const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0])
-  const [initialPosition, setInitialPosition] = useState<[number, number] | null>(null)
+  const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0])
 
   const [selectedUf, setSelectedUf] = useState('0')
   const [selectedCity, setSelectedCity] = useState('0')
+  const [isLoading, setIsLoading] = useState(true);
 
 
   useEffect(() => {
@@ -68,10 +69,18 @@ const CreatePoint = () => {
   }, [selectedUf])
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(position => {
-      const { latitude, longitude } = position.coords
-      setInitialPosition([latitude, longitude])
-    })
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords
+        setInitialPosition([latitude, longitude])
+        setIsLoading(false)
+      },
+      (error) => {
+        console.error("Erro ao obter a localização: ", error)
+        setInitialPosition([-23.1799079, -45.8253392])
+        setIsLoading(false)
+      }
+    )
   }, [])
 
   function handleSelectUf(event: ChangeEvent<HTMLSelectElement>) {
@@ -98,6 +107,10 @@ const CreatePoint = () => {
       'click', (event) => handleMapClick(event)
     )
     return null
+  }
+
+  if (isLoading) {
+    return <div>Carregando...</div>
   }
 
   return (
@@ -150,7 +163,7 @@ const CreatePoint = () => {
             <h2>Endereço</h2>
             <span>Selecione o endereço no mapa</span>
           </legend>
-          <MapContainer center={initialPosition ? initialPosition : [-23.5489, -46.6388]} zoom={15} >
+          <MapContainer center={initialPosition} zoom={15} >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
