@@ -1,5 +1,5 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { FiArrowLeft } from 'react-icons/fi'
 import { MapContainer, TileLayer, Marker, useMapEvent } from 'react-leaflet'
 import { LeafletMouseEvent } from 'leaflet'
@@ -43,6 +43,8 @@ const CreatePoint = () => {
   const [selectedCity, setSelectedCity] = useState('0')
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState<string[]>([])
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     api.get('items').then((response: AxiosResponse) => {
@@ -172,6 +174,8 @@ const CreatePoint = () => {
         image: data.image
       })
       alert('Ponto de coleta cadastrado')
+
+      navigate(-1)
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios error:', error.response?.data)
