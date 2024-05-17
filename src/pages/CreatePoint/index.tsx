@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent } from 'react'
+import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { FiArrowLeft } from 'react-icons/fi'
 import { MapContainer, TileLayer, Marker, useMapEvent } from 'react-leaflet'
@@ -133,6 +133,56 @@ const CreatePoint = () => {
     return null
   }
 
+  async function handleSubmit(event: FormEvent) {
+    event.preventDefault()
+
+    const { name, email, whatsapp } = inputData
+    const uf = selectedUf
+    const city = selectedCity
+    const [latitude, longitude] = selectedPosition
+    const items = selectedItems
+
+    if (!name || !email || !whatsapp || uf === '0' || city === '0' || latitude === 0 || longitude === 0 || items.length === 0) {
+      alert('Por favor, preencha todos os campos obrigatórios.')
+      return
+    }
+
+    const data = {
+      name,
+      email,
+      whatsapp,
+      uf,
+      city,
+      latitude,
+      longitude,
+      items,
+      image: 'fake-image.svg'
+    }
+
+    try {
+      await api.post('points', {
+        name: data.name,
+        email: data.email,
+        whatsapp: data.whatsapp,
+        uf: data.uf,
+        city: data.city,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        itemsIds: data.items,
+        image: data.image
+      })
+      alert('Ponto de coleta cadastrado')
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error.response?.data)
+        alert('Houve um erro ao cadastrar o ponto de coleta: ' + (error.response?.data.message || 'Erro desconhecido'))
+      } else {
+        console.error('Unexpected error:', error)
+        alert('Ocorreu um erro inesperado')
+      }
+    }
+  }
+
   if (isLoading) {
     return <div>Carregando...</div>
   }
@@ -146,7 +196,7 @@ const CreatePoint = () => {
           Voltar para home
         </Link>
       </header>
-      <form >
+      <form onSubmit={handleSubmit}>
         <h1>Cadastro do <br /> ponto de Coleta</h1>
         <fieldset>
           <legend>
@@ -174,11 +224,11 @@ const CreatePoint = () => {
               />
             </div>
             <div className="field">
-              <label htmlFor="Whatsapp">Whatsapp</label>
+              <label htmlFor="whatsapp">Whatsapp</label>
               <input
                 type="text"
-                name="Whatsapp"
-                id="Whatsapp"
+                name="whatsapp"
+                id="whatsapp"
                 onChange={handleInputChange}
               />
             </div>
