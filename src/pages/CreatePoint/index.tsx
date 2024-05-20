@@ -44,6 +44,7 @@ const CreatePoint = () => {
   const [selectedCity, setSelectedCity] = useState('0')
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState<string[]>([])
+  const [selectedFile, setSelectedFile] = useState<File>()
 
   const navigate = useNavigate()
 
@@ -143,37 +144,29 @@ const CreatePoint = () => {
     const uf = selectedUf
     const city = selectedCity
     const [latitude, longitude] = selectedPosition
-    const items = selectedItems
+    const itemsIds = selectedItems
 
     if (!name || !email || !whatsapp || uf === '0' || city === '0' || latitude === 0 || longitude === 0 || items.length === 0) {
       alert('Por favor, preencha todos os campos obrigatórios.')
       return
     }
 
-    const data = {
-      name,
-      email,
-      whatsapp,
-      uf,
-      city,
-      latitude,
-      longitude,
-      items,
-      image: 'fake-image.svg'
+    const data = new FormData()
+    data.append('name', name);
+    data.append('email', email);
+    data.append('whatsapp', whatsapp);
+    data.append('uf', uf);
+    data.append('city', city);
+    data.append('latitude', String(latitude));
+    data.append('longitude', String(longitude));
+    itemsIds.forEach(item => data.append('itemsIds[]', item));
+
+    if (selectedFile) {
+      data.append('image', selectedFile)
     }
 
     try {
-      await api.post('points', {
-        name: data.name,
-        email: data.email,
-        whatsapp: data.whatsapp,
-        uf: data.uf,
-        city: data.city,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        itemsIds: data.items,
-        image: data.image
-      })
+      await api.post('points', data)
       alert('Ponto de coleta cadastrado')
 
       navigate(-1)
@@ -204,7 +197,7 @@ const CreatePoint = () => {
       <form onSubmit={handleSubmit}>
         <h1>Cadastro do <br /> ponto de Coleta</h1>
 
-        <Dropzone />
+        <Dropzone onFileUploaded={setSelectedFile} />
 
 
         <fieldset>
