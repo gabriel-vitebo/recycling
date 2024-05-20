@@ -7,6 +7,7 @@ import axios, { AxiosResponse } from 'axios'
 import { api } from '../../services/api'
 import logo from '../../assets/logo.svg'
 import './styles.css'
+import Dropzone from '../../components/drop-zone'
 
 interface Item {
   id: string,
@@ -202,6 +203,10 @@ const CreatePoint = () => {
       </header>
       <form onSubmit={handleSubmit}>
         <h1>Cadastro do <br /> ponto de Coleta</h1>
+
+        <Dropzone />
+
+
         <fieldset>
           <legend>
             <h2>Dados</h2>
