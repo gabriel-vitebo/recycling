@@ -201,3 +201,104 @@
   background: #E1FAEC;
   border: 2px solid #34CB79;
 }
+
+@media(max-width: 900px) {
+  #page-create-point form {
+    padding: 32px;
+  }
+
+  #page-create-point form h1 {
+    font-size: 28px;
+  }
+
+  #page-create-point form fieldset legend h2 {
+    font-size: 20px;
+  }
+
+  #page-create-point form fieldset legend span {
+    font-size: 12px;
+  }
+
+  #page-create-point form .field-group {
+    flex-direction: column;
+  }
+
+  #page-create-point form .field-group .field {
+    width: 100%;
+    min-width: unset;
+  }
+
+  #page-create-point form .field-group .field + .field {
+    margin-left: 0;
+  }
+
+  #page-create-point form .leaflet-container {
+    height: 300px;
+  }
+
+  #page-create-point form button {
+    width: 100%;
+  }
+}
+
+@media(max-width: 600px) {
+  #page-create-point {
+    padding: 0 10px;
+  }
+
+  #page-create-point form {
+    padding: 24px;
+  }
+
+  #page-create-point form h1 {
+    font-size: 24px;
+  }
+
+  #page-create-point form fieldset legend h2 {
+    font-size: 18px;
+  }
+
+  #page-create-point form fieldset legend span {
+    font-size: 12px;
+  }
+
+  #page-create-point form .leaflet-container {
+    height: 250px;
+  }
+
+  #page-create-point form .field-group .field + .field {
+    margin-left: 0;
+  }
+
+  .items-grid li {
+    padding: 24px 16px 12px;
+  }
+
+  .items-grid li span {
+    font-size: 14px;
+  }
+}
+
+@media(max-width: 380px) {
+  .items-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .items-grid li {
+    padding: 20px 12px 8px;
+    height: auto;
+  }
+
+  .items-grid li img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .items-grid li span {
+    font-size: 12px;
+  }
+
+  #page-create-point form .field-group {
+    gap: 12px;
+  }
+}

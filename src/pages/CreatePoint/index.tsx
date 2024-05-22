@@ -311,9 +311,4 @@ const CreatePoint = () => {
 
 export default CreatePoint
 
-// 1:20
-
-
-
-
-
+// 42
