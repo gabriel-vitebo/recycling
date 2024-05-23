@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FiArrowLeft } from 'react-icons/fi'
-import { MapContainer, TileLayer, Marker } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import logo from '../../assets/logo.svg'
 
 import './styles.css'
 import { api } from '../../services/api'
 import { AxiosResponse } from 'axios'
+import MapIcon from '../../components/map-icon'
 
 interface Item {
   id: string,
   title: string,
   image_url: string
 }
+
 
 const ViewPoints = () => {
   const [items, setItems] = useState<Item[]>([])
@@ -42,7 +44,11 @@ const ViewPoints = () => {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker position={[-23.1799079, -45.8253392]} />
+            <Marker position={[-23.1799079, -45.8253392]}>
+              <Popup>
+                <MapIcon image={`http://localhost:3333/uploads/03ec7add4560ce570629-profile-png.png`} title={'Casa do Biel'} />
+              </Popup>
+            </Marker>
           </MapContainer>
         </fieldset>
 

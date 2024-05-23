@@ -217,6 +217,45 @@
   border: 2px solid #34CB79;
 }
 
+/* Estilo para o conteúdo do Popup */
+#page-view-points > form > fieldset:nth-child(3) > div > div.leaflet-pane.leaflet-map-pane > div.leaflet-pane.leaflet-popup-pane > div > div.leaflet-popup-content-wrapper > div {
+  padding: 0;
+  margin: 0;
+  width: 100px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  background-color: #34CB79;
+
+  border-radius: 5px 5px 0 0;
+}
+
+/* Estilo para a imagem */
+#page-view-points > form > fieldset:nth-child(3) > div > div.leaflet-pane.leaflet-map-pane > div.leaflet-pane.leaflet-popup-pane > div > div.leaflet-popup-content-wrapper > div img {
+  width: 100%;
+  height: auto;
+  max-height: 100px;
+  object-fit: cover;
+}
+
+/* Estilo para o título */
+#page-view-points > form > fieldset:nth-child(3) > div > div.leaflet-pane.leaflet-map-pane > div.leaflet-pane.leaflet-popup-pane > div > div.leaflet-popup-content-wrapper > div h2 {
+  font-size: 10px;
+  text-align: center;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+}
+
+
 @media(max-width: 900px) {
   #page-view-points form {
     padding: 32px;
