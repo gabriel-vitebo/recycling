@@ -1,3 +1,18 @@
+.loadingLogo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.loadingLogo span {
+  margin-top: 40px;
+  font-style: 'roboto';
+  font-size: 15px;
+  line-height: 25px;
+}
+
 #page-create-point {
   width: 100%;
   max-width: 1100px;

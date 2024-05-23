@@ -6,6 +6,8 @@ import { LeafletMouseEvent } from 'leaflet'
 import axios, { AxiosResponse } from 'axios'
 import { api } from '../../services/api'
 import logo from '../../assets/logo.svg'
+import loadingLogo from '../../assets/loading-logo.svg'
+
 import './styles.css'
 import Dropzone from '../../components/drop-zone'
 
@@ -182,7 +184,12 @@ const CreatePoint = () => {
   }
 
   if (isLoading) {
-    return <div>Carregando...</div>
+    return (
+      <div className='loadingLogo'>
+        <img src={loadingLogo} alt="Logo do Recycling" />
+        <span>Carregando app...</span>
+      </div>
+    )
   }
 
   return (
