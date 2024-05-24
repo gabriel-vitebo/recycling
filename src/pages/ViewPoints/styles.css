@@ -71,15 +71,6 @@
   margin-bottom: 40px;
 }
 
-#page-view-points form header[role="legend"] h2 {
-  font-size: 24px;
-}
-
-#page-view-points form header[role="legend"] span {
-  font-size: 14px;
-  font-weight: normal;
-  color: var(--text-color);
-}
 
 #page-view-points form .field-group {
   flex: 1;
@@ -94,17 +85,6 @@
   margin-bottom: 24px;
 }
 
-#page-view-points form .field input[type=text],
-#page-view-points form .field input[type=email],
-#page-view-points form .field input[type=number] {
-  flex: 1;
-  background: #F0F0F5;
-  border-radius: 8px;
-  border: 0;
-  padding: 16px 24px;
-  font-size: 16px;
-  color: #6C6C80;
-}
 
 #page-view-points form .field select {
   -webkit-appearance: none;

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface Props {
   image: string
@@ -7,10 +8,10 @@ interface Props {
 
 const MapIcon: React.FC<Props> = ({ image, title }) => {
   return (
-    <div id="map-icon-container">
+    <Link to='/details' id="map-icon-container">
       <img src={image} alt={`Imagem do ponto do coleta do ${title}`} />
       <h2>{title}</h2>
-    </div>
+    </Link>
   )
 }
 
