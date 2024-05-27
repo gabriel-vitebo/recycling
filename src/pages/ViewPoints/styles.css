@@ -13,14 +13,14 @@
   line-height: 25px;
 }
 
-#page-create-point {
+#page-view-points {
   width: 100%;
   max-width: 1100px;
 
   margin: 0 auto;
 }
 
-#page-create-point header {
+#page-view-points header {
   margin-top: 48px;
 
   display: flex;
@@ -28,7 +28,7 @@
   align-items: center;
 }
 
-#page-create-point header a {
+#page-view-points header a {
   color: var(--title-color);
   font-weight: bold;
   text-decoration: none;
@@ -37,12 +37,12 @@
   align-items: center;
 }
 
-#page-create-point header a svg {
+#page-view-points header a svg {
   margin-right: 16px;
   color: var(--primary-color);
 }
 
-#page-create-point form {
+#page-view-points form {
   margin: 80px auto;
   padding: 64px;
   max-width: 730px;
@@ -53,17 +53,17 @@
   flex-direction: column;
 }
 
-#page-create-point form h1 {
+#page-view-points form h1 {
   font-size: 36px;
 }
 
-#page-create-point form fieldset {
+#page-view-points form fieldset {
   margin-top: 64px;
   min-inline-size: auto;
   border: 0;
 }
 
-#page-create-point form header[role="legend"] {
+#page-view-points form header[role="legend"] {
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -71,22 +71,13 @@
   margin-bottom: 40px;
 }
 
-#page-create-point form header[role="legend"] h2 {
-  font-size: 24px;
-}
 
-#page-create-point form header[role="legend"] span {
-  font-size: 14px;
-  font-weight: normal;
-  color: var(--text-color);
-}
-
-#page-create-point form .field-group {
+#page-view-points form .field-group {
   flex: 1;
   display: flex;
 }
 
-#page-create-point form .field {
+#page-view-points form .field {
   flex: 1;
 
   display: flex;
@@ -94,19 +85,8 @@
   margin-bottom: 24px;
 }
 
-#page-create-point form .field input[type=text],
-#page-create-point form .field input[type=email],
-#page-create-point form .field input[type=number] {
-  flex: 1;
-  background: #F0F0F5;
-  border-radius: 8px;
-  border: 0;
-  padding: 16px 24px;
-  font-size: 16px;
-  color: #6C6C80;
-}
 
-#page-create-point form .field select {
+#page-view-points form .field select {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -119,48 +99,48 @@
   color: #6C6C80;
 }
 
-#page-create-point form .field input::placeholder {
+#page-view-points form .field input::placeholder {
   color: #A0A0B2;
 }
 
-#page-create-point form .field label {
+#page-view-points form .field label {
   font-size: 14px;
   margin-bottom: 8px;
 }
 
-#page-create-point form .field :disabled {
+#page-view-pointsform .field :disabled {
   cursor: not-allowed;
 }
 
-#page-create-point form .field-group .field + .field {
+#page-view-points form .field-group .field + .field {
   margin-left: 24px;
 }
 
-#page-create-point form .field-group input + input {
+#page-view-points form .field-group input + input {
   margin-left: 24px;
 }
 
-#page-create-point form .field-check {
+#page-view-points form .field-check {
   flex-direction: row;
   align-items: center;
 }
 
-#page-create-point form .field-check input[type=checkbox] {
+#page-view-points form .field-check input[type=checkbox] {
   background: #F0F0F5;
 }
 
-#page-create-point form .field-check label {
+#page-view-points form .field-check label {
   margin: 0 0 0 8px;
 }
 
-#page-create-point form .leaflet-container {
+#page-view-points form .leaflet-container {
   width: 100%;
   height: 350px;
   border-radius: 8px;
   margin-bottom: 24px;
 }
 
-#page-create-point form button {
+#page-view-points form button {
   width: 260px;
   height: 56px;
   background: var(--primary-color);
@@ -175,7 +155,7 @@
   cursor: pointer;
 }
 
-#page-create-point form button:hover {
+#page-view-points form button:hover {
   background: #2FB86E;
 }
 
@@ -212,76 +192,115 @@
   color: var(--title-color)
 }
 
-.items-grid li .selected {
+.items-grid li.selected {
   background: #E1FAEC;
   border: 2px solid #34CB79;
 }
 
+/* Estilo para o conteúdo do Popup */
+#page-view-points > form > fieldset:nth-child(3) > div > div.leaflet-pane.leaflet-map-pane > div.leaflet-pane.leaflet-popup-pane > div > div.leaflet-popup-content-wrapper > div {
+  padding: 0;
+  margin: 0;
+  width: 100px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  background-color: #34CB79;
+
+  border-radius: 5px 5px 0 0;
+}
+
+/* Estilo para a imagem */
+#page-view-points > form > fieldset:nth-child(3) > div > div.leaflet-pane.leaflet-map-pane > div.leaflet-pane.leaflet-popup-pane > div > div.leaflet-popup-content-wrapper > div img {
+  width: 100%;
+  height: auto;
+  max-height: 100px;
+  object-fit: cover;
+}
+
+/* Estilo para o título */
+#page-view-points > form > fieldset:nth-child(3) > div > div.leaflet-pane.leaflet-map-pane > div.leaflet-pane.leaflet-popup-pane > div > div.leaflet-popup-content-wrapper > div h2 {
+  font-size: 10px;
+  text-align: center;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+}
+
+
 @media(max-width: 900px) {
-  #page-create-point form {
+  #page-view-points form {
     padding: 32px;
   }
 
-  #page-create-point form h1 {
+  #page-view-points form h1 {
     font-size: 28px;
   }
 
-  #page-create-point form fieldset legend h2 {
+  #page-view-points form fieldset legend h2 {
     font-size: 20px;
   }
 
-  #page-create-point form fieldset legend span {
+  #page-view-points form fieldset legend span {
     font-size: 12px;
   }
 
-  #page-create-point form .field-group {
+  #page-view-points form .field-group {
     flex-direction: column;
   }
 
-  #page-create-point form .field-group .field {
+  #page-view-points form .field-group .field {
     width: 100%;
     min-width: unset;
   }
 
-  #page-create-point form .field-group .field + .field {
+  #page-view-points form .field-group .field + .field {
     margin-left: 0;
   }
 
-  #page-create-point form .leaflet-container {
+  #page-view-points form .leaflet-container {
     height: 300px;
   }
 
-  #page-create-point form button {
+  #page-view-points form button {
     width: 100%;
   }
 }
 
 @media(max-width: 600px) {
-  #page-create-point {
+  #page-view-points {
     padding: 0 10px;
   }
 
-  #page-create-point form {
+  #page-view-points form {
     padding: 24px;
   }
 
-  #page-create-point form h1 {
+  #page-view-points form h1 {
     font-size: 24px;
   }
 
-  #page-create-point form fieldset legend h2 {
+  #page-view-points form fieldset legend h2 {
     font-size: 18px;
   }
 
-  #page-create-point form fieldset legend span {
+  #page-view-points form fieldset legend span {
     font-size: 12px;
   }
 
-  #page-create-point form .leaflet-container {
+  #page-view-points form .leaflet-container {
     height: 250px;
   }
 
-  #page-create-point form .field-group .field + .field {
+  #page-view-points form .field-group .field + .field {
     margin-left: 0;
   }
 
@@ -313,7 +332,7 @@
     font-size: 12px;
   }
 
-  #page-create-point form .field-group {
+  #page-view-points form .field-group {
     gap: 12px;
   }
 }
