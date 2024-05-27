@@ -7,6 +7,7 @@ import axios, { AxiosResponse } from 'axios'
 import { api } from '../../services/api'
 import logo from '../../assets/logo.svg'
 import loadingLogo from '../../assets/loading-logo.svg'
+import successIcon from '../../assets/success.svg'
 
 import './styles.css'
 import Dropzone from '../../components/drop-zone'
@@ -47,6 +48,7 @@ const CreatePoint = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedItems, setSelectedItems] = useState<string[]>([])
   const [selectedFile, setSelectedFile] = useState<File>()
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const navigate = useNavigate()
 
@@ -169,9 +171,11 @@ const CreatePoint = () => {
 
     try {
       await api.post('points', data)
-      alert('Ponto de coleta cadastrado')
-
-      navigate(-1)
+      setShowSuccessModal(true); // Exibir o modal de sucesso
+      setTimeout(() => {
+        setShowSuccessModal(false); // Esconder o modal após 3 segundos
+        navigate(-1);
+      }, 4000);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios error:', error.response?.data)
@@ -201,6 +205,14 @@ const CreatePoint = () => {
           Voltar para home
         </Link>
       </header>
+      {showSuccessModal && (
+        <div className="modal-container">
+          <div className="modal-content">
+            <img src={successIcon} alt="Ícone de sucesso" />
+            <p>Cadastro concluído!</p>
+          </div>
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <h1>Cadastro do <br /> ponto de Coleta</h1>
 
@@ -249,7 +261,7 @@ const CreatePoint = () => {
             <h2>Endereço</h2>
             <span>Selecione o endereço no mapa</span>
           </legend>
-          <MapContainer center={initialPosition} zoom={15} >
+          <MapContainer center={initialPosition} zoom={15} className={showSuccessModal ? "map-container modal-open" : "map-container"} >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
