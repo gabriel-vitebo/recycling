@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 interface Props {
   image: string
   title: string
+  id: string
 }
 
-const MapIcon: React.FC<Props> = ({ image, title }) => {
+const MapIcon: React.FC<Props> = ({ image, title, id }) => {
   return (
-    <Link to='/details' id="map-icon-container">
+    <Link to={`/points/${id}`} id="map-icon-container">
       <img src={image} alt={`Imagem do ponto do coleta do ${title}`} />
       <h2>{title}</h2>
     </Link>

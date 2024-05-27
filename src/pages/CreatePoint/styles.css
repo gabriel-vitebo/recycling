@@ -212,7 +212,7 @@
   color: var(--title-color)
 }
 
-.items-grid li.selected {
+.items-grid li .selected {
   background: #E1FAEC;
   border: 2px solid #34CB79;
 }

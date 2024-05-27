@@ -35,6 +35,7 @@ const ViewPoints = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
+
   useEffect(() => {
     api.get('items').then((response: AxiosResponse) => {
       setItems(response.data.serializedItems)
@@ -57,28 +58,35 @@ const ViewPoints = () => {
   }, [])
 
   useEffect(() => {
+    const queryString = window.location.search
+    const params = new URLSearchParams(queryString)
+    const city = params.get('city')
+    const uf = params.get('uf')
+
     api.get('points', {
       params: {
-        city: 'São José dos Campos',
-        uf: 'SP',
-        items: 'Pilhas e Baterias, Resíduos Eletrônicos'
+        city,
+        uf,
+        items: selectedItems.join(',')
       }
     }).then(response => {
-      console.log(response.data.recyclingPoint)
       setPoints(response.data.recyclingPoint)
+    }).catch((error) => {
+      console.error(error)
     })
-  }, [])
-  console.log(points)
+  }, [selectedItems])
 
-  function handleSelectItem(id: string) {
-    const alreadySelected = selectedItems.findIndex(item => item === id)
+
+
+  function handleSelectItem(title: string) {
+    const alreadySelected = selectedItems.findIndex(item => item === title)
 
     if (alreadySelected >= 0) {
-      const filteredItems = selectedItems.filter(item => item !== id)
+      const filteredItems = selectedItems.filter(item => item !== title)
 
       setSelectedItems(filteredItems)
     } else {
-      setSelectedItems([...selectedItems, id])
+      setSelectedItems([...selectedItems, title])
     }
   }
 
@@ -118,7 +126,7 @@ const ViewPoints = () => {
                   position={[point.latitude, point.longitude]}
                 >
                   <Popup>
-                    <MapIcon image={point.image} title={point.name} />
+                    <MapIcon image={point.image} title={point.name} id={point.id} />
                   </Popup>
                 </Marker>
               ))
@@ -131,8 +139,8 @@ const ViewPoints = () => {
             {items.map(item => (
               <li
                 key={item.id}
-                onClick={() => handleSelectItem(item.id)}
-                className={selectedItems.includes(item.id) ? 'selected' : ''}
+                onClick={() => handleSelectItem(item.title)}
+                className={selectedItems.includes(item.title) ? 'selected' : ''}
               >
                 <img src={item.image_url} alt={`Imagem do item ${item.title}`} />
                 <span>{item.title}</span>

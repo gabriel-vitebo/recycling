@@ -15,7 +15,7 @@ const AppRoutes = () => {
         <Route element={<CreatePoint />} path="/create-point" />
         <Route element={<FindPoint />} path="/find-point" />
         <Route element={<ViewPoints />} path="/view-points" />
-        <Route element={<Details />} path="/details" />
+        <Route element={<Details />} path="/points/:id" />
       </Routes>
     </BrowserRouter>
   );
