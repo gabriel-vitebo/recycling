@@ -170,6 +170,45 @@
     margin: 48px auto 0;
   }
 
+  #page-find-point form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  #page-find-point form label {
+    display: flex;
+  }
+
+  #page-find-point form h1 {
+    font-size: 28px;
+  }
+
+  #page-find-point form fieldset legend h2 {
+    font-size: 20px;
+  }
+
+  #page-find-point form fieldset legend span {
+    font-size: 12px;
+  }
+
+  #page-find-point form .field-group {
+    flex-direction: column;
+  }
+
+  #page-find-point form .field-group .field {
+    width: 100%;
+    min-width: unset;
+  }
+
+  #page-find-point form .field-group .field + .field {
+    margin-left: 0;
+  }
+
+  #page-find-point form .leaflet-container {
+    height: 300px;
+  }
+
   #page-find-point .content main {
     align-items: center;
   }
@@ -178,7 +217,16 @@
     font-size: 42px;
   }
 
-  #page-find-point.content main p {
+  #page-find-point .content main p {
+    font-size: 24px;
+  }
+
+  #page-find-point .content main a {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #page-find-point .content main a strong {
     font-size: 24px;
   }
 }
