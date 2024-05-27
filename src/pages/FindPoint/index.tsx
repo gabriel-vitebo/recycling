@@ -3,7 +3,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import './styles.css'
 import logo from '../../assets/logo.svg'
 import { FiArrowLeft, FiSearch } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 interface IBGEUFResponse {
@@ -20,6 +20,9 @@ const FindPoint = () => {
 
   const [selectedUf, setSelectedUf] = useState('0')
   const [selectedCity, setSelectedCity] = useState('0')
+  const [error, setError] = useState<string | null>(null)
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -58,12 +61,23 @@ const FindPoint = () => {
   }
 
   function createUrl() {
+
     const params = new URLSearchParams({
       city: selectedCity,
       uf: selectedUf
     })
 
     return `/view-points?${params.toString()}`
+  }
+
+  function handleSearchClick(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) {
+    if (selectedUf === '0' || selectedCity === '0') {
+      event.preventDefault();
+      setError("Por favor, selecione um estado e uma cidade.");
+    } else {
+      setError(null);
+      navigate(createUrl());
+    }
   }
 
   return (
@@ -81,18 +95,20 @@ const FindPoint = () => {
           <h1>Seu marketplace de coleta de resíduos.</h1>
           <p>Ajudamos pessoas a encontrarem pontos de coleta de forma eficiente.</p>
           <form>
-            <label htmlFor="uf">Estado (uf)</label>
-            <select
-              name="uf"
-              id="uf"
-              value={selectedUf}
-              onChange={handleSelectUf}
-            >
-              <option value="0">Selecione uma UF</option>
-              {ufs.map(uf => (
-                <option key={uf} value={uf}>{uf}</option>
-              ))}
-            </select>
+            <div className="field">
+              <label htmlFor="uf">Estado (uf)</label>
+              <select
+                name="uf"
+                id="uf"
+                value={selectedUf}
+                onChange={handleSelectUf}
+              >
+                <option value="0">Selecione uma UF</option>
+                {ufs.map(uf => (
+                  <option key={uf} value={uf}>{uf}</option>
+                ))}
+              </select>
+            </div>
 
             <div className="field">
               <label htmlFor="city">Cidade</label>
@@ -109,7 +125,8 @@ const FindPoint = () => {
               </select>
             </div>
           </form>
-          <Link to={createUrl()} >
+          {error && <p className="error">{error}</p>}
+          <Link to={createUrl()} onClick={handleSearchClick} >
             <span>
               <FiSearch />
             </span>
