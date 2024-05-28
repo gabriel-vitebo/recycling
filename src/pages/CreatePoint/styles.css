@@ -211,7 +211,7 @@
 }
 
 .modal-open {
-  z-index: -1; /* Defina um valor menor que o z-index do modal */
+  z-index: -1;
 }
 
 .items-grid {
@@ -351,4 +351,8 @@
   #page-create-point form .field-group {
     gap: 12px;
   }
+
+  .modal-content p {
+    font-size: 18px;
+   }
 }
