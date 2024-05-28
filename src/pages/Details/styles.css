@@ -288,9 +288,17 @@
   #page-details.content main p {
     font-size: 24px;
   }
+
+  #page-details .content .items-grid li {
+    padding: 24px 16px 12px;
+  }
+
+  #page-details .content .items-grid li span {
+    font-size: 14px;
+  }
 }
 
-@media(max-width: 600px) {
+/* @media(max-width: 500px) {
   #page-details {
     padding: 10px;
   }
@@ -326,4 +334,22 @@
   #page-details .content main a strong {
     font-size: 14px;
   }
-}
+
+  #page-details .content .items-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #page-details .content .items-grid li {
+    padding: 20px 12px 8px;
+    height: auto;
+  }
+
+  #page-details .content .items-grid li img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  #page-details .content .items-grid li span {
+    font-size: 12px;
+  }
+} */
