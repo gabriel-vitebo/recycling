@@ -52,7 +52,7 @@ const Details = () => {
       <div className="content">
         <header>
           <img src={logo} alt="Recycling Logo" />
-          <Link to='/'>
+          <Link to='/view-point'>
             <FiArrowLeft />
             Voltar para home
           </Link>

@@ -329,5 +329,3 @@ const CreatePoint = () => {
 }
 
 export default CreatePoint
-
-// 42
