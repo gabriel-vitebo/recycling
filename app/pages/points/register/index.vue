@@ -3,7 +3,7 @@
 
 import { ref, reactive, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-// import { useLeaflet } from '@vue-leaflet/vue-leaflet'
+import { LMap, LMarker, LTileLayer } from "@vue-leaflet/vue-leaflet";
 import axios from 'axios'
 // import { api } from '~/services/api'
 import logo from '../../../public/assets/logo.svg'
@@ -30,12 +30,14 @@ const selectedItems = ref([])
 const selectedFile = ref(null)
 
 const router = useRouter()
+const { $leaflet } = useNuxtApp();
 
 onMounted(() => {
   // api.get('items').then((response) => {
     // items.value = response.data.serializedItems
   // })
 
+  console.log("Leaflet carregado:", $leaflet);
   axios
     .get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
     .then((response) => {
@@ -190,15 +192,17 @@ async function handleSubmit(event) {
       <fieldset class="mt-8">
         <legend class="text-xl font-semibold mb-4">Endereço</legend>
         <span class="block text-sm mb-4">Selecione o endereço no mapa</span>
-        <l-map
-          :zoom="15"
-          :center="initialPosition"
-          class="w-full h-96 rounded mb-4"
-          @click="handleMapClick"
-        >
-          <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          <l-marker :lat-lng="selectedPosition" />
-        </l-map>
+        <ClientOnly>
+          <l-map
+            :zoom="15"
+            :center="initialPosition"
+            class="w-full h-96 rounded mb-4"
+            @click="handleMapClick"
+          >
+              <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+              <l-marker :lat-lng="selectedPosition" />
+          </l-map>
+        </ClientOnly>
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label for="uf" class="block text-sm font-medium">Estado (UF)</label>
@@ -262,7 +266,3 @@ async function handleSubmit(event) {
     </div>
   </div>
 </template>
-
-<style>
-/* Adicione estilos globais ou específicos aqui, se necessário */
-</style>
