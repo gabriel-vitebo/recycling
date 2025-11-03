@@ -1,13 +1,12 @@
 <script setup lang="ts">
-// filepath: /app/pages/create-point/index.vue
-
 import { ref, reactive, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useApi } from '~/composable/use-api'
 import logo from '../../../../public/assets/logo.svg'
 import successImage from '../../../../public/assets/success.svg'
 
-const { fetchItems, createPoint } = useApi()
+
+const { createPoint } = useApi()
 const router = useRouter()
 
 interface Item {
@@ -196,17 +195,14 @@ async function handleSubmit(event: Event) {
       <fieldset class="mt-8">
         <legend class="text-xl font-semibold mb-4">Endereço</legend>
         <span class="block text-sm mb-4">Selecione o endereço no mapa</span>
-        <ClientOnly>
-          <l-map
-            :zoom="15"
-            :center="initialPosition"
-            class="w-full h-96 rounded mb-4"
-            @click="handleMapClick"
-          >
-              <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-              <l-marker :lat-lng="selectedPosition" />
-          </l-map>
-        </ClientOnly>
+       <ClientOnly>
+         <MapLibrePicker
+           v-if="!isLoading"
+          :initialPosition="initialPosition"
+          @update:coords="(v) => selectedPosition = [v.lat, v.lng]"
+        />
+      </ClientOnly>
+
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label for="uf" class="block text-sm font-medium">Estado (UF)</label>
