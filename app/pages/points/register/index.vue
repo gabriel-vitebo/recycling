@@ -1,24 +1,30 @@
-<script setup>
-// filepath: /home/gabriel/Documentos/projetos/recycling/app/pages/create-point/index.vue
+<script setup lang="ts">
+// filepath: /app/pages/create-point/index.vue
 
 import { ref, reactive, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { LMap, LMarker, LTileLayer } from "@vue-leaflet/vue-leaflet";
-import axios from 'axios'
-// import { api } from '~/services/api'
-import logo from '../../../public/assets/logo.svg'
-import loadingLogo from '../../../public/assets/loading-logo.svg'
-import successImage from '../../../public/assets/success.svg'
+import { useApi } from '~/composable/use-api'
+import logo from '../../../../public/assets/logo.svg'
+import successImage from '../../../../public/assets/success.svg'
 
-const items = ref([])
-const ufs = ref([])
-const cities = ref([])
-const selectedPosition = ref([0, 0])
-const initialPosition = ref([0, 0])
+const { fetchItems, createPoint } = useApi()
+const router = useRouter()
+
+interface Item {
+  id: number
+  title: string
+  image_url: string
+}
+
+const items = ref<Item[]>([])
+const ufs = ref<string[]>([])
+const cities = ref<string[]>([])
+const selectedPosition = ref<[number, number]>([0, 0])
+const initialPosition = ref<[number, number]>([0, 0])
 const isLoading = ref(true)
 const showSuccessModal = ref(false)
 
-const inputData = reactive({
+const inputData = reactive<Record<string, string>>({
   name: '',
   email: '',
   whatsapp: '',
@@ -26,73 +32,74 @@ const inputData = reactive({
 
 const selectedUf = ref('0')
 const selectedCity = ref('0')
-const selectedItems = ref([])
-const selectedFile = ref(null)
+const selectedItems = ref<number[]>([])
+const selectedFile = ref<File | null>(null)
 
-const router = useRouter()
-const { $leaflet } = useNuxtApp();
+onMounted(async () => {
+  try {
+    // ✅ Buscando os itens do backend via composable
+    items.value = await fetchItems()
 
-onMounted(() => {
-  // api.get('items').then((response) => {
-    // items.value = response.data.serializedItems
-  // })
+    // ✅ Buscando UFs (via IBGE)
+    const ufsResponse = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+    const ufsData = await ufsResponse.json()
+    ufs.value = ufsData.map((uf: any) => uf.sigla)
 
-  console.log("Leaflet carregado:", $leaflet);
-  axios
-    .get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
-    .then((response) => {
-      ufs.value = response.data.map((uf) => uf.sigla)
-    })
-
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const { latitude, longitude } = position.coords
-      initialPosition.value = [latitude, longitude]
-      isLoading.value = false
-    },
-    () => {
-      initialPosition.value = [-23.1799079, -45.8253392]
-      isLoading.value = false
-    }
-  )
-})
-
-watch(selectedUf, (newUf) => {
-  if (newUf === '0') return
-  axios
-    .get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${newUf}/municipios`)
-    .then((response) => {
-      cities.value = response.data.map((city) => city.nome)
-    })
-})
-
-function handleSelectUf(event) {
-  selectedUf.value = event.target.value
-}
-
-function handleSelectCity(event) {
-  selectedCity.value = event.target.value
-}
-
-function handleInputChange(event) {
-  const { name, value } = event.target
-  inputData[name] = value
-}
-
-function handleSelectItem(id) {
-  const alreadySelected = selectedItems.value.includes(id)
-  if (alreadySelected) {
-    selectedItems.value = selectedItems.value.filter((item) => item !== id)
-  } else {
-    selectedItems.value.push(id)
+    // ✅ Pega localização inicial
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords
+        initialPosition.value = [latitude, longitude]
+        isLoading.value = false
+      },
+      () => {
+        initialPosition.value = [-23.1799079, -45.8253392]
+        isLoading.value = false
+      }
+    )
+  } catch (error) {
+    console.error('Erro ao carregar dados iniciais:', error)
+    isLoading.value = false
   }
+})
+
+watch(selectedUf, async (newUf) => {
+  if (newUf === '0') return
+  const response = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${newUf}/municipios`)
+  const data = await response.json()
+  cities.value = data.map((city: any) => city.nome)
+})
+
+function handleSelectUf(event: Event) {
+  selectedUf.value = (event.target as HTMLSelectElement).value
 }
 
-function handleMapClick(event) {
+function handleSelectCity(event: Event) {
+  selectedCity.value = (event.target as HTMLSelectElement).value
+}
+
+function handleInputChange(event: Event) {
+  const target = event.target as HTMLInputElement
+  inputData[target.name] = target.value
+}
+
+// typed handler for the Dropzone component event
+function onFileUploaded(file: File) {
+  selectedFile.value = file
+}
+
+function handleSelectItem(id: number) {
+  const alreadySelected = selectedItems.value.includes(id)
+  selectedItems.value = alreadySelected
+    ? selectedItems.value.filter((item) => item !== id)
+    : [...selectedItems.value, id]
+}
+
+function handleMapClick(event: any) {
   selectedPosition.value = [event.latlng.lat, event.latlng.lng]
 }
 
-async function handleSubmit(event) {
+async function handleSubmit(event: Event) {
   event.preventDefault()
 
   const { name, email, whatsapp } = inputData
@@ -101,7 +108,7 @@ async function handleSubmit(event) {
   const [latitude, longitude] = selectedPosition.value
   const itemsIds = selectedItems.value
 
-  if (!name || !email || !whatsapp || uf === '0' || city === '0' || latitude === 0 || longitude === 0 || items.value.length === 0) {
+  if (!name || !email || !whatsapp || uf === '0' || city === '0' || latitude === 0 || longitude === 0 || itemsIds.length === 0) {
     alert('Por favor, preencha todos os campos obrigatórios.')
     return
   }
@@ -114,25 +121,24 @@ async function handleSubmit(event) {
   data.append('city', city)
   data.append('latitude', String(latitude))
   data.append('longitude', String(longitude))
-  itemsIds.forEach((item) => data.append('itemsIds[]', item))
+  itemsIds.forEach((item) => data.append('itemsIds[]', String(item)))
 
-  if (selectedFile.value) {
-    data.append('image', selectedFile.value)
-  }
+  if (selectedFile.value) data.append('image', selectedFile.value)
 
   try {
-    // await api.post('points', data)
+    await createPoint(data)
     showSuccessModal.value = true
+
     setTimeout(() => {
       showSuccessModal.value = false
       router.push('/')
     }, 4000)
-  } catch (error) {
-    console.error('Erro ao cadastrar o ponto de coleta:', error)
-    alert('Houve um erro ao cadastrar o ponto de coleta.')
+  } catch (error: any) {
+    alert('Erro ao cadastrar o ponto de coleta: ' + error.message)
   }
 }
 </script>
+
 
 <template>
   <div id="page-create-point" class="max-w-5xl mx-auto">
@@ -143,15 +149,16 @@ async function handleSubmit(event) {
       </nuxt-link>
     </header>
 
+    <!-- Mostra um indicador de carregamento enquanto está carregando -->
     <div v-if="isLoading" class="flex flex-col items-center justify-center h-screen">
-      <img :src="loadingLogo" alt="Carregando" />
-      <span class="mt-4 text-lg">Carregando app...</span>
+      <h1 class="text-3xl font-bold mb-8">Carregando...</h1>
     </div>
 
-    <form v-else @submit="handleSubmit" class="bg-white p-8 rounded-lg shadow-md mt-8">
+    <!-- Mostra o conteúdo principal quando o carregamento termina -->
+    <div v-else>
       <h1 class="text-3xl font-bold mb-8">Cadastro do ponto de coleta</h1>
 
-      <dropzone @file-uploaded="(file) => (selectedFile = file)" />
+      <DropZone @file-uploaded="onFileUploaded" />
 
       <fieldset class="mt-8">
         <legend class="text-xl font-semibold mb-4">Dados</legend>
@@ -253,7 +260,7 @@ async function handleSubmit(event) {
       >
         Cadastrar Ponto de Coleta
       </button>
-    </form>
+    </div>
 
     <div
       v-if="showSuccessModal"
