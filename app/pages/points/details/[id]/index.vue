@@ -2,9 +2,9 @@
 // filepath: /home/gabriel/Documentos/projetos/recycling/app/pages/details/index.vue
 
 import { ref, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import axios from 'axios'
+import { useRoute } from 'vue-router'
 import logo from '../../../public/assets/logo.svg'
+import { fetchPointDetails } from '../../../../composable/use-api'
 
 const data = ref({
   recyclingPoint: {
@@ -20,12 +20,16 @@ const data = ref({
 
 const isLoading = ref(true)
 const route = useRoute()
-const router = useRouter()
-const id = route.params.id
+const id = route.query.id // Obtém o ID da query string
 
 onMounted(async () => {
+  if (!id) {
+    console.error('ID do ponto de coleta não fornecido na query string.')
+    return
+  }
+
   try {
-    const response = await axios.get(`/api/points/${id}`)
+    const response = await fetchPointDetails(id)
     data.value = response.data
     isLoading.value = false
   } catch (error) {

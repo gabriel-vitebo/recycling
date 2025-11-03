@@ -5,9 +5,7 @@ export function useApi() {
     typeof config?.public?.apiBase === 'string' ? config.public.apiBase : undefined
 
   async function get(endpoint: string) {
-    return await $fetch(endpoint, {
-      baseURL: apiBase
-    })
+    return await $fetch(endpoint)
   }
 
   async function post(endpoint: string, data: any) {
@@ -45,5 +43,25 @@ export function useApi() {
     }
   }
 
-  return { get, post, fetchItems, createPoint }
+  async function fetchPoints(params: { city: string; uf: string; items: string }) {
+    try {
+      const response: any = await get('/points', { params })
+      return response?.recyclingPoint ?? []
+    } catch (error) {
+      console.error('Erro ao buscar pontos de coleta:', error)
+      throw error
+    }
+  }
+
+  async function fetchPointDetails(id: string) {
+    try {
+      const response: any = await get(`/points/${id}`)
+      return response
+    } catch (error) {
+      console.error('Erro ao buscar detalhes do ponto de coleta:', error)
+      throw error
+    }
+  }
+
+  return { get, post, fetchItems, createPoint, fetchPoints, fetchPointDetails }
 }

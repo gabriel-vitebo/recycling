@@ -6,7 +6,10 @@ import { useRoute } from 'vue-router'
 import loadingLogo from '../../../public/assets/loading-logo.svg'
 import logo from '../../../public/assets/logo.svg'
 import { LMap, LMarker, LPopup } from "@vue-leaflet/vue-leaflet";
-import axios from 'axios'
+import { useApi } from '~/composable/use-api'
+
+
+const { fetchItems } = useApi()
 
 const items = ref([])
 const points = ref([])
@@ -16,11 +19,9 @@ const isLoading = ref(true)
 
 const route = useRoute()
 
-onMounted(() => {
+onMounted(async () => {
   // Fetch items
-  axios.get('/api/items').then((response) => {
-    items.value = response.data.serializedItems
-  })
+  items.value = await fetchItems()
 
   // Get user location
   navigator.geolocation.getCurrentPosition(
@@ -37,38 +38,28 @@ onMounted(() => {
 
   // Fetch points based on query params
   const params = route.query
-  axios
-    .get('/api/points', {
-      params: {
-        city: params.city,
-        uf: params.uf,
-        items: selectedItems.value.join(','),
-      },
+  try {
+    points.value = await fetchPoints({
+      city: params.city,
+      uf: params.uf,
+      items: selectedItems.value.join(','),
     })
-    .then((response) => {
-      points.value = response.data.recyclingPoint
-    })
-    .catch((error) => {
-      console.error(error)
-    })
+  } catch (error) {
+    console.error(error)
+  }
 })
 
-watch(selectedItems, () => {
+watch(selectedItems, async () => {
   const params = route.query
-  axios
-    .get('/api/points', {
-      params: {
-        city: params.city,
-        uf: params.uf,
-        items: selectedItems.value.join(','),
-      },
+  try {
+    points.value = await fetchPoints({
+      city: params.city,
+      uf: params.uf,
+      items: selectedItems.value.join(','),
     })
-    .then((response) => {
-      points.value = response.data.recyclingPoint
-    })
-    .catch((error) => {
-      console.error(error)
-    })
+  } catch (error) {
+    console.error(error)
+  }
 })
 
 function handleSelectItem(title) {

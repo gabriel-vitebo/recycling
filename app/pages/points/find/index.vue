@@ -5,6 +5,8 @@ import { ref, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import logo from '../../../public/assets/logo.svg'
+import { useApi } from '~/composable/use-api'
+const { get } = useApi()
 
 const ufs = ref([])
 const cities = ref([])
@@ -14,12 +16,10 @@ const error = ref(null)
 
 const router = useRouter()
 
-onMounted(() => {
-  axios
-    .get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
-    .then((response) => {
-      ufs.value = response.data.map((uf) => uf.sigla)
-    })
+onMounted(async () => {
+  const ufsResponse = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+  const ufsData = await ufsResponse.json()
+  ufs.value = ufsData.map(uf => uf.sigla)
 })
 
 watch(selectedUf, (newUf) => {

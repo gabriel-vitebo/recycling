@@ -37,9 +37,6 @@ const selectedFile = ref<File | null>(null)
 
 onMounted(async () => {
   try {
-    // ✅ Buscando os itens do backend via composable
-    items.value = await fetchItems()
-
     // ✅ Buscando UFs (via IBGE)
     const ufsResponse = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
     const ufsData = await ufsResponse.json()
