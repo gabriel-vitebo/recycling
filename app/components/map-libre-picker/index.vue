@@ -2,6 +2,7 @@
 import { ref, onMounted, nextTick } from 'vue'
 import maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
+import useLocation from '../../composable/use-location'
 
 const emit = defineEmits<{
   (e: 'update:coords', coords: { lat: number; lng: number }): void
@@ -22,25 +23,29 @@ const DEFAULT_CENTER: [number, number] = [-45.8872, -23.2237] // [lng, lat]
 // 🗺️ Centro inicial reativo
 const center = ref<[number, number]>(props.initialPosition || DEFAULT_CENTER)
 
+// composable de localização — pode fornecer posição salva no localStorage
+const { latitude, longitude, requestLocation } = useLocation()
+
 const MAPTILER_KEY = '7A0JwWlh8S2cRYqlDgpb'
 
 onMounted(() => {
-  nextTick(() => {
-    // tenta pegar a geolocalização do usuário
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        center.value = [pos.coords.longitude, pos.coords.latitude]
-        initMap()
-      },
-      () => {
-        // se o usuário negar ou houver erro, usa São José dos Campos
-        center.value = DEFAULT_CENTER
-        initMap()
-      },
-      {
-        timeout: 8000,
-      }
-    )
+  nextTick(async () => {
+    // se já existir latitude/longitude salvas, usa elas
+    if (latitude.value !== null && longitude.value !== null) {
+      center.value = [longitude.value, latitude.value]
+      initMap()
+      return
+    }
+
+    // caso não exista, tenta pedir permissão e obter a posição
+    const loc = await requestLocation({ timeout: 8000 })
+    if (loc) {
+      center.value = [loc.lng, loc.lat]
+    } else {
+      // fallback
+      center.value = DEFAULT_CENTER
+    }
+    initMap()
   })
 })
 
@@ -54,7 +59,7 @@ function initMap() {
     zoom: 13,
   })
 
-  map.value.addControl(new maplibregl.NavigationControl(), 'top-right')
+  map.value.addControl(new (maplibregl as any).NavigationControl(), 'top-right')
 
   // adiciona marcador na posição inicial
   marker.value = new maplibregl.Marker({ color: '#22c55e' })

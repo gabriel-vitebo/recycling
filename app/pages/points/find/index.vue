@@ -39,7 +39,7 @@ function createUrl() {
     city: selectedCity.value,
     uf: selectedUf.value,
   })
-  return `/view-points?${params.toString()}`
+  return `/points/view?${params.toString()}`
 }
 
 function handleSearchClick(event) {
@@ -99,7 +99,7 @@ function handleSearchClick(event) {
       <nuxt-link
         :to="createUrl()"
         @click="handleSearchClick"
-        class="flex items-center bg-primary text-white px-6 py-3 rounded-lg mt-6 hover:bg-green-600"
+        class="flex items-center bg-primary text-white px-6 py-3 rounded-lg mt-6 bg-green-600"
       >
         <i class="fi fi-search mr-2"></i>
         <strong>Procurar Ponto de Coleta</strong>

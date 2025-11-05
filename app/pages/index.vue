@@ -11,7 +11,7 @@
           Ajudamos pessoas a encontrarem pontos de coleta de forma eficiente.
         </p>
 
-        <NuxtLink to="/create-point" class="w-full max-w-[360px] h-18 bg-green-600 rounded-md no-underline flex items-center overflow-hidden mt-10 hover:bg-green-500">
+        <NuxtLink to="/points/register" class="w-full max-w-[360px] h-18 bg-green-600 rounded-md no-underline flex items-center overflow-hidden mt-10 hover:bg-green-500">
           <span class="w-18 h-18 bg-black/10 flex items-center justify-center transition-colors">
             <svg class="text-white w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
@@ -22,7 +22,7 @@
           <strong class="flex-1 text-center text-white text-base font-bold">Cadastre um ponto de coleta</strong>
         </NuxtLink>
 
-        <NuxtLink to="/find-point" class="w-full max-w-[360px] h-18 bg-green-600 rounded-md no-underline flex items-center overflow-hidden mt-4 hover:bg-green-500">
+        <NuxtLink to="/points/view" class="w-full max-w-[360px] h-18 bg-green-600 rounded-md no-underline flex items-center overflow-hidden mt-4 hover:bg-green-500">
           <span class="w-18 h-18 bg-black/10 flex items-center justify-center transition-colors">
             <svg class="text-white w-5 h-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <circle cx="11" cy="11" r="8" />

@@ -5,8 +5,9 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import loadingLogo from '../../../public/assets/loading-logo.svg'
 import logo from '../../../public/assets/logo.svg'
-import { LMap, LMarker, LPopup } from "@vue-leaflet/vue-leaflet";
 import { useApi } from '~/composable/use-api'
+import MapLibrePicker from '../../../components/map-libre-picker/index.vue'
+import useLocation from '../../../composable/use-location'
 
 
 const { fetchItems } = useApi()
@@ -23,18 +24,29 @@ onMounted(async () => {
   // Fetch items
   items.value = await fetchItems()
 
-  // Get user location
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const { latitude, longitude } = position.coords
-      initialPosition.value = [latitude, longitude]
-      isLoading.value = false
-    },
-    () => {
+  // Get user location — prefer saved value, senão pede permissão e salva via composable
+  const { latitude, longitude, requestLocation } = useLocation()
+
+  if (latitude.value !== null && longitude.value !== null) {
+    // composable já carregou do localStorage
+    initialPosition.value = [latitude.value, longitude.value]
+    isLoading.value = false
+  } else {
+    // pede permissão e salva internamente no composable
+    try {
+      const loc = await requestLocation({ timeout: 8000 })
+      if (loc) {
+        initialPosition.value = [loc.lat, loc.lng]
+      } else {
+        initialPosition.value = [-23.1799079, -45.8253392]
+      }
+    } catch (err) {
       initialPosition.value = [-23.1799079, -45.8253392]
+      console.error('Erro ao obter localização:', err)
+    } finally {
       isLoading.value = false
     }
-  )
+  }
 
   // Fetch points based on query params
   const params = route.query
@@ -91,29 +103,7 @@ function handleSelectItem(title) {
       <p class="text-lg text-gray-600">Encontre no mapa um ponto de coleta.</p>
 
       <fieldset class="mt-8">
-        <LMap
-          :zoom="15"
-          :center="initialPosition"
-          class="w-full h-96 rounded mb-4"
-        >
-          <l-tile-layer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          <LMarker
-            v-for="point in points"
-            :key="point.id"
-            :lat-lng="[point.latitude, point.longitude]"
-          >
-            <LPopup>
-              <div class="flex flex-col items-center">
-                <img
-                  :src="point.image"
-                  :alt="point.name"
-                  class="w-24 h-24 object-cover rounded"
-                />
-                <h2 class="text-sm font-bold mt-2">{{ point.name }}</h2>
-              </div>
-            </LPopup>
-          </LMarker>
-        </LMap>
+        <MapLibrePicker :initialPosition="initialPosition" />
       </fieldset>
 
       <fieldset class="mt-8">
